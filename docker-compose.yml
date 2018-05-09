@@ -1,0 +1,43 @@
+version: '3'
+
+volumes:
+  nginx-nice: # Volume for static files of the "nice" project
+  nginx-nice-react: # Volume for static files of the "nice-react" project
+
+services:
+
+  nginx:
+    build: ./services/nginx
+    depends_on:
+      - nice-react
+      - nice
+    ports:
+      - 80:80   # http
+      - 443:443 # https
+    volumes:
+      - nginx-nice:/srv/nice-server/nice
+      - nginx-nice-react:/srv/nice-server/nice-react
+    command:
+      - nginx
+
+  # Build container.
+  # It builds the nice-react storybook, puts it in a shared volume for nginx and exits
+  nice:
+    build: ./services/nice
+    volumes:
+      - nginx-nice:/srv/nice/storybook-static
+    command:
+      - tail
+      - -f
+      - /dev/null
+
+  # Build container.
+  # It builds the nice main site, puts it in a shared volume for nginx and exits
+  nice-react:
+    build: ./services/nice-react
+    volumes:
+      - nginx-nice-react:/srv/nice-react/storybook-static
+    command:
+      - tail
+      - -f
+      - /dev/null

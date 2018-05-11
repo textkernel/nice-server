@@ -7,6 +7,7 @@ volumes:
 services:
 
   nginx:
+    restart: always
     build: ./services/nginx
     depends_on:
       - nice-react
@@ -26,10 +27,6 @@ services:
     build: ./services/nice
     volumes:
       - nginx-nice:/srv/nice/storybook-static
-    command:
-      - tail
-      - -f
-      - /dev/null
 
   # Build container.
   # It builds the nice main site, puts it in a shared volume for nginx and exits
@@ -37,7 +34,3 @@ services:
     build: ./services/nice-react
     volumes:
       - nginx-nice-react:/srv/nice-react/storybook-static
-    command:
-      - tail
-      - -f
-      - /dev/null

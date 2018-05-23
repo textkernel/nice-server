@@ -16,6 +16,7 @@ services:
       - 80:80   # http
       - 443:443 # https
     volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
       - nginx-nice:/srv/nice-server/nice
       - nginx-nice-react:/srv/nice-server/nice-react
     command:
